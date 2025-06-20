@@ -39,6 +39,8 @@ const ProfilePage = () => {
               src={selectedImage ? URL.createObjectURL(selectedImage) : assets.avatar_icon} 
               alt="Profile" 
             />
+            
+
             <label 
               htmlFor="avatar"
               className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer"
@@ -130,6 +132,7 @@ const ProfilePage = () => {
               </button>
             </div>
           </form>
+          <img className={`max-w-44 aspect-square rounded-full mx-10 max-sm:mt-10 ${selectedImage&&'rounded-full'}`} src={authUser?.profilePic||assets.logo_icon} alt="" />
         </div>
       </div>
     </div>

@@ -10,12 +10,12 @@ import messageRouter from './routes/messageRoutes.js';
 const app = express();
 const server = http.createServer(app);
 
-//  Initialize socket.io
+// Initialize socket.io
 export const io = new Server(server, {
   cors: { origin: '*' },
 });
 
-//  Online users map
+// Online users map
 export const userSocketMap = {}; // { userId: socketId }
 
 io.on('connection', (socket) => {
@@ -34,16 +34,16 @@ io.on('connection', (socket) => {
   });
 });
 
-//  Middleware
+// Middleware
 app.use(express.json({ limit: '4mb' }));
 app.use(cors());
 
-//  Routes
+// Routes
 app.use('/api/status', (req, res) => res.send('Server is live 🚀'));
-app.use('/api/auth', userRouter);
+app.use('/api/auth', userRouter); // ✅ This prefixes all userRouter routes with /api/auth
 app.use('/api/messages', messageRouter);
 
-//  Connect DB and start server
+// Connect DB and start server
 const startServer = async () => {
   await connectDB();
 

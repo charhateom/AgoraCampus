@@ -120,54 +120,99 @@ export const checkAuth = (req,res) => {
 
 }
 // controller to update user profile details 
+// export const updateProfile = async (req, res) => {
+//   try {
+//     const { profilePic, bio, fullName } = req.body;
+//     const userId = req.user._id;
+
+//     if (!bio || !fullName) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "Full name and bio are required.",
+//       });
+//     }
+
+//     let updatedUser;
+
+//     if (!profilePic) {
+//       updatedUser = await User.findByIdAndUpdate(
+//         userId,
+//         { fullName, bio },
+//         { new: true }
+//       );
+//     } else {
+//       const upload = await cloudinary.uploader.upload(profilePic, {
+//         folder: "profilePics",
+//       });
+
+//       updatedUser = await User.findByIdAndUpdate(
+//         userId,
+//         { profilePic: upload.secure_url, fullName, bio },
+//         { new: true }
+//       );
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Profile updated successfully.",
+//       user: {
+//         _id: updatedUser._id,
+//         fullName: updatedUser.fullName,
+//         email: updatedUser.email,
+//         bio: updatedUser.bio,
+//         profilePic: updatedUser.profilePic,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Profile update error:", error.message);
+//     res.status(500).json({
+//       success: false,
+//       message: "Server error. Please try again later.",
+//     });
+//   }
+// };
+
+
+
+// Update profile controller with better error handling
 export const updateProfile = async (req, res) => {
   try {
+    console.log('Update profile request received:', req.body);
+    
     const { profilePic, bio, fullName } = req.body;
     const userId = req.user._id;
 
     if (!bio || !fullName) {
       return res.status(400).json({
         success: false,
-        message: "Full name and bio are required.",
+        message: "Full name and bio are required",
       });
     }
 
-    let updatedUser;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { fullName, bio, profilePic },
+      { new: true }
+    );
 
-    if (!profilePic) {
-      updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { fullName, bio },
-        { new: true }
-      );
-    } else {
-      const upload = await cloudinary.uploader.upload(profilePic, {
-        folder: "profilePics",
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
       });
-
-      updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { profilePic: upload.secure_url, fullName, bio },
-        { new: true }
-      );
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Profile updated successfully.",
-      user: {
-        _id: updatedUser._id,
-        fullName: updatedUser.fullName,
-        email: updatedUser.email,
-        bio: updatedUser.bio,
-        profilePic: updatedUser.profilePic,
-      },
+      message: "Profile updated successfully",
+      user: updatedUser
     });
+
   } catch (error) {
-    console.error("Profile update error:", error.message);
-    res.status(500).json({
+    console.error('Profile update error:', error.message);
+    return res.status(500).json({
       success: false,
-      message: "Server error. Please try again later.",
+      message: "Internal server error during profile update"
     });
   }
 };
