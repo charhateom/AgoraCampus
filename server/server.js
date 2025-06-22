@@ -6,7 +6,7 @@ import { Server } from 'socket.io';
 import connectDB from './lib/db.js';
 import userRouter from './routes/userRoutes.js';
 import messageRouter from './routes/messageRoutes.js';
-
+import postRouter from './routes/postRoutes.js';
 const app = express();
 const server = http.createServer(app);
 
@@ -42,7 +42,7 @@ app.use(cors());
 app.use('/api/status', (req, res) => res.send('Server is live 🚀'));
 app.use('/api/auth', userRouter); // ✅ This prefixes all userRouter routes with /api/auth
 app.use('/api/messages', messageRouter);
-
+app.use('/api/posts', postRouter);
 // Connect DB and start server
 const startServer = async () => {
   await connectDB();
