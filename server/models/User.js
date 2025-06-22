@@ -4,6 +4,8 @@ const userSchema = new mongoose.Schema({
     fullName:{type:String,required:true},
     password:{type:String , required:true,minlength:6},
     bio:{type:String},
+    profilePic: {
+    type: String,}
 
 },{timestamps:true});
 
