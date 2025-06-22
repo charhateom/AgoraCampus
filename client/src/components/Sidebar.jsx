@@ -1,16 +1,15 @@
-
-
 import React, { useState, useContext, useEffect } from 'react';
 import asset from '../assets/assets.js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { ChatContext } from '../context/ChatContext.jsx';
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // ✅ current route
   const [showDropdown, setShowDropdown] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
+  
   const { logout, onlineUsers = [] } = useContext(AuthContext);
   const {
     getUsers,
@@ -29,6 +28,9 @@ const Sidebar = () => {
         user?.fullName?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : users;
+
+  //  Check current path
+  const isOnCommunityPage = location.pathname === '/community';
 
   return (
     <div
@@ -138,13 +140,13 @@ const Sidebar = () => {
         </div>
       </div>
 
-      {/* Bottom Section – Go to Community */}
+      {/* Bottom Section – Dynamic Button */}
       <div className='mt-4 pt-4 border-t border-[#2D2D52]'>
         <button
           className='w-full bg-violet-600 hover:bg-violet-700 transition px-4 py-2 rounded-lg text-white font-medium text-sm'
-          onClick={() => navigate('/community')}
+          onClick={() => navigate(isOnCommunityPage ? '/' : '/community')}
         >
-          🌐 Go to Community
+          {isOnCommunityPage ? '💬 Go to Chat' : '🌐 Go to Community'}
         </button>
       </div>
     </div>
